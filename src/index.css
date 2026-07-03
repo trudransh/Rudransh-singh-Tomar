@@ -5,7 +5,7 @@
 html,
 body,
 #root {
-  background: #0c0c0c;
+  background: #0a0a0f;
   font-family: 'Kanit', sans-serif;
 }
 
@@ -16,49 +16,184 @@ body,
 }
 
 ::selection {
-  background: rgba(46, 107, 255, 0.4);
+  background: rgba(139, 124, 246, 0.45);
   color: #fff;
 }
 
 /* Gradient display type — shared by all giant headings */
 .hero-heading {
-  background: linear-gradient(180deg, #646973 0%, #bbccd7 100%);
+  background: linear-gradient(180deg, #5e6270 0%, #c9d2e4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Violet→cyan accent text */
+.accent-gradient {
+  background: linear-gradient(100deg, #8b7cf6 0%, #6fe7f2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glass panel */
+.glass {
+  background: rgba(18, 18, 27, 0.6);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border: 1px solid rgba(232, 236, 241, 0.08);
+}
+
 /* Subtle math-grid backdrop (Explorer's Ledger motif) */
 .ledger-grid {
   background-image:
-    linear-gradient(rgba(215, 226, 234, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(215, 226, 234, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(232, 236, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 236, 241, 0.04) 1px, transparent 1px);
   background-size: 72px 72px;
 }
 
-/* Custom cursor */
+/* Spotlight reveal layer — mask follows the cursor (see Hero) */
+.spotlight-layer {
+  -webkit-mask-image: radial-gradient(
+    circle 260px at var(--sx, -999px) var(--sy, -999px),
+    black 30%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    circle 260px at var(--sx, -999px) var(--sy, -999px),
+    black 30%,
+    transparent 72%
+  );
+}
+
+/* ---- StringTune cursor (tutorial-06 pattern) ---- */
 .cursor-hidden,
 .cursor-hidden * {
   cursor: none !important;
 }
-.cursor-hot .cursor-ring {
-  transform: scale(1.7);
-  background: rgba(255, 255, 255, 0.12);
+.st-cursor,
+.st-cursor-echo {
+  display: none;
+}
+@media (pointer: fine) {
+  html.st-ready .st-cursor,
+  html.st-ready .st-cursor-echo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    display: block;
+    pointer-events: none;
+    transform: translate3d(calc(var(--x, -100) * 1px), calc(var(--y, -100) * 1px), 0)
+      translate(-50%, -50%);
+    will-change: transform;
+  }
+  html.st-ready .st-cursor .st-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid #e8ecf1;
+    border-radius: 50%;
+    mix-blend-mode: exclusion;
+    transition:
+      scale 0.4s cubic-bezier(0.35, 0.35, 0, 1),
+      background-color 0.4s cubic-bezier(0.35, 0.35, 0, 1);
+  }
+  html.st-ready .st-cursor.-hot .st-ring {
+    scale: 1.7;
+    background-color: rgba(232, 236, 241, 0.14);
+  }
+  html.st-ready .st-cursor-echo {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: #8b7cf6;
+  }
 }
 
-/* Scroll-driven marquee rows */
-.marquee-row {
+/* ---- StringTune magnetic (tutorial-07 pattern) ---- */
+.st-magnetic,
+[string='magnetic'] {
+  transform: translate(calc(var(--magnetic-x, 0) * 0.35%), calc(var(--magnetic-y, 0) * 0.35%))
+    rotateX(calc(var(--magnetic-y, 0) * -0.04deg)) rotateY(calc(var(--magnetic-x, 0) * 0.04deg));
   will-change: transform;
 }
-.marquee-outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(215, 226, 234, 0.45);
+
+/* ---- Living stat values (staggered glow pulse) ---- */
+@keyframes stat-pulse {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(139, 124, 246, 0);
+  }
+  50% {
+    text-shadow: 0 0 26px rgba(139, 124, 246, 0.8);
+  }
+}
+.stat-pulse {
+  animation: stat-pulse 3.2s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+/* ---- Vibrant hover fill for giant headings ---- */
+.vibrant-gradient {
+  background-image: linear-gradient(
+    95deg,
+    #8b7cf6 0%,
+    #6fe7f2 25%,
+    #f472b6 50%,
+    #fbbf24 75%,
+    #8b7cf6 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: vibrant-flow 5s linear infinite;
+}
+@keyframes vibrant-flow {
+  to {
+    background-position: -300% 0;
+  }
+}
+
+/* ---- Scale-in hover background (tutorial-06 .item::before pattern) ---- */
+.hover-bg {
+  position: relative;
+  --hover-bg-color: rgba(232, 236, 241, 0.07);
+}
+.hover-bg > * {
+  position: relative;
+  z-index: 1;
+}
+.hover-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0.3rem;
+  border-radius: 1rem;
+  background-color: var(--hover-bg-color);
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity 0.3s cubic-bezier(0.86, 0, 0.31, 1),
+    scale 0.3s cubic-bezier(0.86, 0, 0.31, 1);
+}
+.hover-bg:hover::before {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity 0.6s cubic-bezier(0.35, 0.35, 0, 1),
+    scale 0.6s cubic-bezier(0.35, 0.35, 0, 1);
+}
+.hover-bg-ink {
+  --hover-bg-color: rgba(10, 10, 15, 0.06);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-row,
-  .bp-card {
-    will-change: auto;
+  .vibrant-gradient,
+  .stat-pulse {
+    animation: none;
   }
 }
 

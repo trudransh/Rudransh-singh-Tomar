@@ -1,5 +1,6 @@
 import { Trophy } from 'lucide-react';
 import { FadeIn } from '../components/motion';
+import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 import { achievements } from '../data/profile';
 
@@ -12,18 +13,15 @@ export function WinsSection() {
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <SectionTag index="06" label="TROPHIES" />
-          <h2
-            className="hero-heading font-display font-black uppercase leading-none tracking-tight"
-            style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}
-          >
+          <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
             Wins
-          </h2>
+          </GradientHeading>
         </FadeIn>
 
         <div className="mt-14 space-y-px overflow-hidden rounded-2xl border border-paper/10 bg-paper/10">
           {achievements.map((a, i) => (
             <FadeIn key={a.event} delay={i * 0.08}>
-              <div className="group flex flex-col gap-2 bg-ink px-6 py-6 transition-colors duration-300 hover:bg-[#101318] sm:flex-row sm:items-center sm:justify-between sm:gap-6 md:px-8">
+              <div className="hover-bg group flex flex-col gap-2 bg-ink px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 md:px-8">
                 <div className="flex items-center gap-4">
                   <Trophy className="h-5 w-5 shrink-0 text-electric-glow" />
                   <div>

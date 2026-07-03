@@ -33,43 +33,182 @@ export const stats = [
   { value: 18, suffix: '', prefix: '', label: 'chains shipped on' },
 ];
 
-export const marqueeItems = [
-  'TRUST PROTOCOL',
-  '$25K HUSH GRANT',
-  'ERC-404 MAINNET AUDITS',
-  'DYDX V4 TEARDOWN',
-  'SUI KATHMANDU WINNER',
-  'MONTE CARLO RISK ENGINE',
-  '105+ RESEARCH DOCS',
-  'ZK ORDER BOOK DESIGN',
-  'BEST DEFI USE CASE — GOA',
-  '18 CHAINS',
+// About paragraph, segmented so key phrases light up in the accent color
+// as the scroll reveal sweeps through.
+export const aboutSegments = [
+  { text: "I'm a smart contract security engineer and protocol researcher. I take ideas from" },
+  { text: 'ground-zero research', highlight: true },
+  { text: 'to' },
+  { text: 'audited mainnet code', highlight: true },
+  { text: '—' },
+  { text: '105+ technical documents', highlight: true },
+  { text: ', production Solidity across' },
+  { text: '18 chains', highlight: true },
+  { text: ', and' },
+  { text: 'simulations that prove designs', highlight: true },
+  { text: 'before real capital ever touches them.' },
 ];
 
-export const aboutText =
-  "I'm a smart contract security engineer and protocol researcher. I take ideas from ground-zero research to audited mainnet code — 105+ technical documents, production Solidity across 18 chains, and simulations that prove designs before real capital ever touches them.";
+// The constellation. Each chain is a star on the map, with the actual work
+// done there. Lines between stars are real: they exist only where a project
+// genuinely spans both chains (see chainLinks).
+export type ChainNode = {
+  name: string;
+  role: string;
+  projects: { name: string; note: string }[];
+};
 
-// The constellation. Each chain is a star on the map.
-export const chains = [
-  { name: 'Ethereum', note: 'Production Solidity · ERC-4626 vaults · audits' },
-  { name: 'Polygon', note: 'Mainnet audits · Predex security review' },
-  { name: 'Arbitrum', note: 'DeFi integrations' },
-  { name: 'Base', note: 'EVM deployments' },
-  { name: 'BSC', note: 'EVM deployments' },
-  { name: 'Solana', note: 'zkRL lending · Sentinel policy engine · Anchor' },
-  { name: 'ICP', note: 'Hush Protocol ($25k) · Kai Foundry dApps · Motoko' },
-  { name: 'Sui', note: 'Trust Protocol (Move) · DeepBook Prime design' },
-  { name: 'Aptos', note: 'FaceWise-Pay · Move contracts' },
-  { name: 'Algorand', note: 'Denance Perps settlement · ATG design' },
-  { name: 'Polkadot', note: 'DotLuck lottery · xcDot' },
-  { name: 'StarkNet', note: 'Regen-Bazaar Cairo contracts' },
-  { name: 'Oasis Sapphire', note: 'Confidential oracle aggregation · TEE' },
-  { name: 'Avalanche', note: 'Universal Security Module suite · ACP-77' },
-  { name: 'NEAR', note: 'Protocol research' },
-  { name: 'Flare', note: 'Liquid staking architecture · FDC' },
-  { name: 'LEZ / Logos', note: 'Private token vesting (RFP-017)' },
-  { name: 'Sia', note: 'AI Slab Optimizer · Weft sync provider' },
+export const chains: ChainNode[] = [
+  {
+    name: 'Ethereum',
+    role: 'Home turf — production Solidity, audits, DeFi integrations',
+    projects: [
+      { name: 'Ladder Integrations', note: '5,000+ lines: ERC-4626 wrappers, AMM pools, epoch redemptions' },
+      { name: 'Trust Protocol', note: 'Game-theoretic trust bonds, UUPS architecture' },
+      { name: 'ERC-404 Audits', note: 'Mainnet security, Uniswap + bonding curves' },
+      { name: 'Phoenix', note: 'RWA CDP factory — S&P 500-pegged stablecoins' },
+    ],
+  },
+  {
+    name: 'Polygon',
+    role: 'Audit ground — severity-graded production reviews',
+    projects: [
+      { name: 'Predex Review', note: 'H-1/H-2 critical findings, deployment checklist' },
+      { name: 'Mainnet Audits', note: 'Contracts secured pre-launch at Prospective' },
+    ],
+  },
+  {
+    name: 'Arbitrum',
+    role: 'DeFi integration deployments',
+    projects: [{ name: 'Ladder Integrations', note: 'Vault + AMM integration targets' }],
+  },
+  {
+    name: 'Base',
+    role: 'EVM deployment target',
+    projects: [{ name: 'Ladder Integrations', note: 'Cross-chain vault deployments' }],
+  },
+  {
+    name: 'BSC',
+    role: 'EVM deployment target',
+    projects: [{ name: 'EVM Deployments', note: 'Production contract deployments' }],
+  },
+  {
+    name: 'Solana',
+    role: 'ZK lending + agent policy infrastructure',
+    projects: [
+      { name: 'zkRL', note: 'ZK under-collateralized lending — 4 Anchor programs' },
+      { name: 'Sentinel', note: 'YAML policy DSL for AI agent treasuries' },
+      { name: 'KILT DID', note: 'Multichain Web3 name registration (EdDSA)' },
+    ],
+  },
+  {
+    name: 'ICP',
+    role: 'Grant-winning security + shipped production dApps',
+    projects: [
+      { name: 'Hush Protocol', note: '$25k grant — DKIM + VetKeys wallet recovery' },
+      { name: 'Kai Foundry dApps', note: 'mahaka, merch-store, indonesia-on-chain (Motoko)' },
+      { name: 'pump.icp', note: 'Memecoin launchpad' },
+    ],
+  },
+  {
+    name: 'Sui',
+    role: 'Hackathon-winning Move + margin engine design',
+    projects: [
+      { name: 'Trust Protocol', note: 'Move port — won Kathmandu 2025 Professional Track' },
+      { name: 'DeepBook Prime', note: 'Cross-margin engine — 7 Move packages designed' },
+      { name: 'Gas Futures', note: 'Object-based gas price hedging architecture' },
+    ],
+  },
+  {
+    name: 'Aptos',
+    role: 'Move payments experiments',
+    projects: [
+      { name: 'FaceWise-Pay', note: 'Facial-recognition payments in Move' },
+      { name: 'aptfund / aptospay', note: 'Funding + payment protocols' },
+    ],
+  },
+  {
+    name: 'Algorand',
+    role: 'Settlement-layer architecture for a perp DEX',
+    projects: [
+      { name: 'Denance Perps', note: 'ATG settlement design — ~3.3s irreversible finality' },
+      { name: 'Liquidsat', note: 'BTC-collateral lending, ASA-native design' },
+    ],
+  },
+  {
+    name: 'Polkadot',
+    role: 'Cross-chain identity + dApp experiments',
+    projects: [
+      { name: 'KILT DID', note: 'Multichain Web3 name system design' },
+      { name: 'DotLuck', note: 'Decentralized lottery on xcDot' },
+    ],
+  },
+  {
+    name: 'StarkNet',
+    role: 'Cairo contract work',
+    projects: [{ name: 'Regen-Bazaar', note: 'Cairo port of the impact marketplace' }],
+  },
+  {
+    name: 'Oasis Sapphire',
+    role: 'Confidential computing research',
+    projects: [{ name: 'COAS', note: 'TEE oracle aggregation — kills liquidation front-running' }],
+  },
+  {
+    name: 'Avalanche',
+    role: 'Validator security module suite',
+    projects: [{ name: 'Universal SecModules', note: '5 modules for ACP-77 L1s — NFT-gated, stake-basket, PoA→PoS' }],
+  },
+  {
+    name: 'NEAR',
+    role: 'Protocol research',
+    projects: [{ name: 'Research', note: 'Protocol design exploration' }],
+  },
+  {
+    name: 'Flare',
+    role: 'Liquid staking architecture',
+    projects: [{ name: 'Liquid Staking', note: '4-layer design on FDC attestations + FTSO feeds' }],
+  },
+  {
+    name: 'LEZ / Logos',
+    role: 'Privacy-preserving vesting design',
+    projects: [{ name: 'RFP-017 Vesting', note: 'Private claims — the anti-MANTRA design' }],
+  },
+  {
+    name: 'Sia',
+    role: 'Storage-layer systems in Rust',
+    projects: [
+      { name: 'AI Slab Optimizer', note: 'ML repacking daemon — Sia Foundation top priority' },
+      { name: 'Weft', note: 'Local-first Yjs sync provider' },
+    ],
+  },
 ];
+
+// Real cross-chain connections: [chainA, chainB, project that spans them]
+export const chainLinks: [string, string, string][] = [
+  ['Ethereum', 'Sui', 'Trust Protocol'],
+  ['Ethereum', 'StarkNet', 'Regen-Bazaar'],
+  ['Ethereum', 'Arbitrum', 'Ladder Integrations'],
+  ['Ethereum', 'Base', 'Ladder Integrations'],
+  ['Ethereum', 'Polygon', 'Audit practice'],
+  ['Ethereum', 'BSC', 'EVM deployments'],
+  ['Polkadot', 'Solana', 'KILT DID'],
+  ['Polkadot', 'Ethereum', 'KILT DID'],
+  ['Sui', 'Algorand', 'Order-book settlement research'],
+];
+
+// Hero spotlight hidden layer — actual research doc titles + audit finding IDs.
+export const hiddenDocs = [
+  'ASC SETTLEMENT RESEARCH', '[H-1] HOSTILE CALLDATA SIGNING', 'DYDX V4 ORDERBOOK EXTRACTION',
+  'V2 ZK ARCHITECTURE — SP1', 'GOSSIP-BASED COMMUNICATION', 'MONTE CARLO PHASE 2',
+  'UPSHIFT PRICE TIMESTAMP PROBLEM', '[H-2] UNAUTHENTICATED API SURFACE', 'TWO SEPARATE LEDGERS DESIGN',
+  'GLP AS A MODEL FOR STABLE VAULT', 'TRUST BONDS SPECIFICATION', '[M-3] ZERO-CONF REORG RISK',
+  'AI SLAB OPTIMIZER PROPOSAL', 'WEFT — YJS ON SIA', 'COAS TEE AGGREGATION',
+  'RFP-017 PRIVATE VESTING', 'SUI GAS FUTURES', 'DEEPBOOK PRIME CROSS-MARGIN',
+  'UNIVERSAL SECURITY MODULES', 'KILT DID MULTICHAIN', 'LIQUIDSAT ATG LENDING',
+  'HOTSTUFF 3-PHASE CONSENSUS', 'STABLESWAP INVARIANT FUZZING', 'NAV CONSERVED TO 2 WEI',
+  '89% JUNIOR DEPLETION @ 20/80', '130X SIMULATION SPEEDUP', '784,660 LINES COMMITTED',
+];
+
 
 export const experience = [
   {

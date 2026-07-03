@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform, MotionValue } from 'framer-motion';
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
 
@@ -67,59 +67,88 @@ export function ScrambleText({ text, className = '' }: { text: string; className
   );
 }
 
-// --- AnimatedText: character-by-character scroll reveal -------------------
-export function AnimatedText({ text, className = '' }: { text: string; className?: string }) {
+// --- HighlightText: scroll-scrubbed word reveal with accent keywords -----
+export type TextSegment = { text: string; highlight?: boolean };
+
+export function HighlightText({
+  segments,
+  className = '',
+}: {
+  segments: TextSegment[];
+  className?: string;
+}) {
   const ref = useRef<HTMLParagraphElement>(null);
+  // completes while the paragraph is still mid-viewport, so it never sits
+  // half-faded the way the old character effect did
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start 0.8', 'end 0.2'],
+    offset: ['start 0.92', 'start 0.4'],
   });
-  const chars = text.split('');
+
+  const words = segments.flatMap((seg) =>
+    seg.text
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => ({ w, h: !!seg.highlight })),
+  );
 
   return (
     <p ref={ref} className={className}>
-      {chars.map((ch, i) => (
-        <Char key={i} progress={scrollYProgress} index={i} total={chars.length} char={ch} />
+      {words.map((word, i) => (
+        <Word key={i} progress={scrollYProgress} index={i} total={words.length} word={word} />
       ))}
     </p>
   );
 }
 
-function Char({
+function Word({
   progress,
   index,
   total,
-  char,
+  word,
 }: {
-  progress: ReturnType<typeof useScroll>['scrollYProgress'];
+  progress: MotionValue<number>;
   index: number;
   total: number;
-  char: string;
+  word: { w: string; h: boolean };
 }) {
   const start = index / total;
   const end = start + 1 / total;
-  const opacity = useTransform(progress, [start, end], [0.2, 1]);
-  return <motion.span style={{ opacity }}>{char}</motion.span>;
+  const opacity = useTransform(progress, [start, end], [0.12, 1]);
+  return (
+    <motion.span
+      style={{ opacity }}
+      className={word.h ? 'font-medium text-electric-glow' : undefined}
+    >
+      {word.w}{' '}
+    </motion.span>
+  );
 }
 
 // --- Counter: animated stat number ---------------------------------------
+// once=false makes it re-run every time it scrolls into view.
 export function Counter({
   value,
   prefix = '',
   suffix = '',
   className = '',
+  once = true,
 }: {
   value: number;
   prefix?: string;
   suffix?: string;
   className?: string;
+  once?: boolean;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const inView = useInView(ref, { once, margin: '-40px' });
   const [n, setN] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView) {
+      if (!once) setN(0); // rewind so the next entrance re-counts
+      return;
+    }
     const duration = 1400;
     const start = performance.now();
     let raf: number;
@@ -131,7 +160,7 @@ export function Counter({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, value]);
+  }, [inView, value, once]);
 
   const formatted =
     value >= 1000

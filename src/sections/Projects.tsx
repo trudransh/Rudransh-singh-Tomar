@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { GhostButton, SectionTag } from '../components/ui';
 import { FadeIn } from '../components/motion';
+import { GradientHeading } from '../components/GradientHeading';
+import { Tilt3D } from '../components/Tilt3D';
 import { projects } from '../data/profile';
 
 export function ProjectsSection() {
@@ -10,12 +12,9 @@ export function ProjectsSection() {
       <div className="mx-auto max-w-6xl">
         <FadeIn>
           <SectionTag index="04" label="FIELD WORK" />
-          <h2
-            className="hero-heading font-display font-black uppercase leading-none tracking-tight"
-            style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
-          >
+          <GradientHeading style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}>
             Projects
-          </h2>
+          </GradientHeading>
         </FadeIn>
 
         <div className="mt-16">
@@ -48,10 +47,9 @@ function Card({
 
   return (
     <div ref={ref} className="h-[92vh]" style={{ paddingTop: `${index * 28}px` }}>
-      <motion.article
-        style={{ scale: shrink }}
-        className="sticky top-24 origin-top rounded-[36px] border-2 border-paper/25 bg-ink p-6 sm:rounded-[44px] sm:p-8 md:top-28 md:rounded-[52px] md:p-10"
-      >
+      <motion.article style={{ scale: shrink }} className="sticky top-24 origin-top md:top-28">
+        <Tilt3D>
+          <div className="rounded-[36px] border-2 border-paper/25 bg-ink p-6 sm:rounded-[44px] sm:p-8 md:rounded-[52px] md:p-10">
         {/* top row */}
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex items-baseline gap-5">
@@ -110,6 +108,8 @@ function Card({
             </span>
           ))}
         </div>
+          </div>
+        </Tilt3D>
       </motion.article>
     </div>
   );

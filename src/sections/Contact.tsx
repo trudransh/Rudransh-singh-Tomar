@@ -1,35 +1,66 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Check } from 'lucide-react';
 import { FadeIn } from '../components/motion';
+import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 import { identity, socials } from '../data/profile';
 
-// Giant pill CTA that scales in as you reach the end of the ledger —
-// the prmpt "view" button, repurposed as the final handshake.
+// Giant pill CTA that scales in as you reach the end of the ledger.
+// Clicking copies the email (mailto: is a silent no-op on machines with
+// no mail client — WSL included) and confirms it in place; it still
+// opens the mail app where one exists.
 function GiantCTA() {
   const ref = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
   const scale = useTransform(scrollYProgress, [0.1, 0.85], [0, 1]);
+
+  const copyEmail = () => {
+    navigator.clipboard?.writeText(identity.email).catch(() => {});
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2500);
+  };
 
   return (
     <div ref={ref} className="mt-20 md:mt-28">
       <motion.a
         href={`mailto:${identity.email}`}
+        onClick={copyEmail}
         style={{ scale, transformOrigin: 'center bottom' }}
         className="group flex w-full items-center justify-center rounded-full bg-white py-8 transition-colors duration-300 hover:bg-electric md:py-12"
       >
-        <span
-          className="font-display font-black uppercase leading-none tracking-tight text-ink transition-colors duration-300 group-hover:text-white"
-          style={{ fontSize: 'clamp(2.4rem, 9vw, 110px)' }}
-        >
-          say hi
-        </span>
-        <ArrowUpRight
-          className="ml-4 h-[clamp(2rem,7vw,80px)] w-[clamp(2rem,7vw,80px)] text-ink transition-all duration-300 group-hover:-translate-y-2 group-hover:translate-x-2 group-hover:text-white"
-          strokeWidth={2.5}
-        />
+        {copied ? (
+          <>
+            <Check
+              className="mr-4 h-[clamp(1.6rem,5vw,56px)] w-[clamp(1.6rem,5vw,56px)] text-ink transition-colors duration-300 group-hover:text-white"
+              strokeWidth={3}
+            />
+            <span
+              className="font-display font-black uppercase leading-none tracking-tight text-ink transition-colors duration-300 group-hover:text-white"
+              style={{ fontSize: 'clamp(1.4rem, 4.5vw, 56px)' }}
+            >
+              email copied
+            </span>
+          </>
+        ) : (
+          <>
+            <span
+              className="font-display font-black uppercase leading-none tracking-tight text-ink transition-colors duration-300 group-hover:text-white"
+              style={{ fontSize: 'clamp(2.4rem, 9vw, 110px)' }}
+            >
+              say hi
+            </span>
+            <ArrowUpRight
+              className="ml-4 h-[clamp(2rem,7vw,80px)] w-[clamp(2rem,7vw,80px)] text-ink transition-all duration-300 group-hover:-translate-y-2 group-hover:translate-x-2 group-hover:text-white"
+              strokeWidth={2.5}
+            />
+          </>
+        )}
       </motion.a>
+      <p className="mt-4 text-center font-mono text-xs tracking-[0.2em] text-paper/40">
+        {identity.email}
+      </p>
     </div>
   );
 }
@@ -40,12 +71,9 @@ export function ContactSection() {
       <div className="mx-auto max-w-6xl">
         <FadeIn>
           <SectionTag index="07" label="OPEN A CHANNEL" />
-          <h2
-            className="hero-heading font-display font-black uppercase leading-none tracking-tight"
-            style={{ fontSize: 'clamp(2.6rem, 10vw, 140px)' }}
-          >
+          <GradientHeading style={{ fontSize: 'clamp(2.6rem, 10vw, 140px)' }}>
             Let's build
-          </h2>
+          </GradientHeading>
           <p className="mt-4 max-w-xl font-light leading-relaxed text-paper/70">
             Auditing a launch, designing a protocol, or pressure-testing an idea before capital
             touches it — reach out.
@@ -59,7 +87,7 @@ export function ContactSection() {
                 href={s.url}
                 target={s.url.startsWith('mailto') ? undefined : '_blank'}
                 rel="noreferrer"
-                className="group flex h-full items-center justify-between gap-4 bg-ink p-7 transition-colors duration-300 hover:bg-[#101318]"
+                className="hover-bg group flex h-full items-center justify-between gap-4 bg-ink p-7"
               >
                 <div>
                   <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-paper/40 sm:text-xs">
