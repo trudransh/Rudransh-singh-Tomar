@@ -197,6 +197,28 @@ body,
   }
 }
 
+/* ---- SPECTER storyteller (pixel ghost) ---- */
+.specter-canvas {
+  image-rendering: pixelated;
+}
+@keyframes specter-bob {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+.specter-bob {
+  animation: specter-bob 3s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .specter-bob {
+    animation: none;
+  }
+}
+
 /* Thin scrollbar, ledger style */
 ::-webkit-scrollbar {
   width: 6px;

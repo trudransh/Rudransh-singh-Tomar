@@ -8,6 +8,8 @@ import { ProjectsSection } from './sections/Projects';
 import { ResearchSection } from './sections/Research';
 import { WinsSection } from './sections/Wins';
 import { ContactSection } from './sections/Contact';
+import { Storyteller } from './components/Storyteller';
+import { LedgerBase } from './components/LedgerBase';
 import { initStringTune, cursorFollower } from './lib/stringtune';
 
 export default function App() {
@@ -24,6 +26,9 @@ export default function App() {
 
   return (
     <main id="top" className="bg-ink text-paper" style={{ overflowX: 'clip' }}>
+      {/* The Ledger Base — fixed global texture the whole site stacks over */}
+      <LedgerBase />
+
       <Navbar />
 
       {/* StringTune cursor: ring + trailing echoes (tutorial-06) */}
@@ -38,7 +43,7 @@ export default function App() {
       <HeroSection />
 
       {/* The overlay panel: rounded corners + shadow sell the takeover */}
-      <div className="relative z-10 rounded-t-[40px] bg-ink shadow-[0_-24px_80px_rgba(0,0,0,0.7)] sm:rounded-t-[50px] md:rounded-t-[60px]">
+      <div className="relative z-10 rounded-t-[40px] bg-ink/[0.92] shadow-[0_-24px_80px_rgba(0,0,0,0.7)] sm:rounded-t-[50px] md:rounded-t-[60px]">
         <AboutSection />
         <ConstellationSection />
         <ExperienceSection />
@@ -47,6 +52,9 @@ export default function App() {
         <WinsSection />
         <ContactSection />
       </div>
+
+      {/* SPECTER — pixel storyteller, docked across the whole page */}
+      <Storyteller />
     </main>
   );
 }

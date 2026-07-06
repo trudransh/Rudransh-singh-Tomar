@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, Check } from 'lucide-react';
-import { FadeIn } from '../components/motion';
+import { FadeIn, Parallax } from '../components/motion';
 import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 import { identity, socials } from '../data/profile';
@@ -67,18 +67,20 @@ function GiantCTA() {
 
 export function ContactSection() {
   return (
-    <section id="contact" className="ledger-grid border-t border-paper/10 px-5 pb-12 pt-24 sm:px-8 md:px-10 md:pt-32">
+    <section id="contact" data-story="contact" className="border-t border-paper/10 px-5 pb-12 pt-24 sm:px-8 md:px-10 md:pt-32">
       <div className="mx-auto max-w-6xl">
-        <FadeIn>
-          <SectionTag index="07" label="OPEN A CHANNEL" />
-          <GradientHeading style={{ fontSize: 'clamp(2.6rem, 10vw, 140px)' }}>
-            Let's build
-          </GradientHeading>
-          <p className="mt-4 max-w-xl font-light leading-relaxed text-paper/70">
-            Auditing a launch, designing a protocol, or pressure-testing an idea before capital
-            touches it — reach out.
-          </p>
-        </FadeIn>
+        <Parallax speed={-0.12}>
+          <FadeIn>
+            <SectionTag index="07" label="OPEN A CHANNEL" />
+            <GradientHeading style={{ fontSize: 'clamp(2.6rem, 10vw, 140px)' }}>
+              Let's build
+            </GradientHeading>
+            <p className="mt-4 max-w-xl font-light leading-relaxed text-paper/70">
+              Auditing a launch, designing a protocol, or pressure-testing an idea before capital
+              touches it — reach out.
+            </p>
+          </FadeIn>
+        </Parallax>
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-paper/10 bg-paper/10 sm:grid-cols-2">
           {socials.map((s, i) => (

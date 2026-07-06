@@ -1,4 +1,4 @@
-import { FadeIn } from '../components/motion';
+import { FadeIn, Parallax } from '../components/motion';
 import { GradientHeading } from '../components/GradientHeading';
 import { researchAreas } from '../data/profile';
 
@@ -7,20 +7,22 @@ import { researchAreas } from '../data/profile';
 // like flipping the ledger open to a printed page.
 export function ResearchSection() {
   return (
-    <section className="rounded-t-[40px] bg-white px-5 py-24 text-ink sm:rounded-t-[50px] sm:px-8 md:rounded-t-[60px] md:px-10 md:py-32">
+    <section data-story="research" className="rounded-t-[40px] bg-white px-5 py-24 text-ink sm:rounded-t-[50px] sm:px-8 md:rounded-t-[60px] md:px-10 md:py-32">
       <div className="mx-auto max-w-6xl">
-        <FadeIn>
-          <div className="mb-6 font-mono text-xs tracking-[0.3em] text-electric sm:text-sm">
-            {'// '}05 — THE VAULT
-          </div>
-          <GradientHeading base="ink" style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
-            Research
-          </GradientHeading>
-          <p className="mt-4 max-w-xl font-light leading-relaxed text-ink/60">
-            105+ technical documents — architecture specs, audit reports, grant proposals, protocol
-            designs — organized into six territories.
-          </p>
-        </FadeIn>
+        <Parallax speed={-0.12}>
+          <FadeIn>
+            <div className="mb-6 font-mono text-xs tracking-[0.3em] text-electric sm:text-sm">
+              {'// '}05 — THE VAULT
+            </div>
+            <GradientHeading base="ink" style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
+              Research
+            </GradientHeading>
+            <p className="mt-4 max-w-xl font-light leading-relaxed text-ink/60">
+              105+ technical documents — architecture specs, audit reports, grant proposals, protocol
+              designs — organized into six territories.
+            </p>
+          </FadeIn>
+        </Parallax>
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
           {researchAreas.map((r, i) => (

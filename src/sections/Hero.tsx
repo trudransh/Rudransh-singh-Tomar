@@ -1,151 +1,178 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { FadeIn, ScrambleText } from '../components/motion';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { FadeIn, Parallax, ScrambleText } from '../components/motion';
 import { ContactButton } from '../components/ui';
+import { SceneBoundary } from '../components/hero3d/ErrorBoundary';
 import { magnetic } from '../lib/stringtune';
-import { hiddenDocs, identity } from '../data/profile';
+import { identity } from '../data/profile';
 
-const SYMBOLS = ['0x', 'Σ', '∆', '%', '§', '#', '£'];
+// three lands in its own chunk; the typography hero paints immediately.
+const Scene = lazy(() => import('../components/hero3d/Scene'));
 
-// Lando-style reveal: a hidden layer of real research titles and audit
-// finding IDs, uncovered by a soft spotlight that trails the cursor.
-// The mask lives in CSS (.spotlight-layer); we just feed it eased coords.
-function SpotlightLayer() {
-  const ref = useRef<HTMLDivElement>(null);
+// full: desktop, mouse, motion ok · lite: touch/small, fewer shards, no tilt ·
+// static: prefers-reduced-motion — no pin, no scrub, no 3D.
+type HeroMode = 'full' | 'lite' | 'static';
+
+function detectMode(): HeroMode {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static';
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  return fine && window.innerWidth >= 768 ? 'full' : 'lite';
+}
+
+// Glassmorphic facts hovering in the void around the block. Real numbers only.
+// Each pill sits at its own scroll speed + mouse depth for layered parallax.
+const PILLS = [
+  { text: 'open to audits', pos: 'left-[6%] top-[40%]', delay: 0.6, dur: 5.2, speed: 0.15, depth: 8 },
+  { text: '18 chains shipped', pos: 'right-[6%] top-[34%]', delay: 0.75, dur: 6.1, speed: 0.25, depth: 14 },
+  { text: '$27.5k+ hackathon wins', pos: 'right-[10%] bottom-[27%]', delay: 0.9, dur: 5.6, speed: 0.35, depth: 20 },
+];
+
+// Transform layers, outer→inner: FadeIn (entrance) · Parallax (scroll) ·
+// mouse-parallax · float · magnetic. One writer per element, never doubled.
+function Pill({ p }: { p: (typeof PILLS)[number] }) {
+  const mx = useSpring(0, { stiffness: 120, damping: 20 });
+  const my = useSpring(0, { stiffness: 120, damping: 20 });
 
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return;
-    const el = ref.current;
-    if (!el) return;
-    let tx = -999;
-    let ty = -999;
-    let x = -999;
-    let y = -999;
-    let raf = 0;
     const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      tx = e.clientX - r.left;
-      ty = e.clientY - r.top;
-    };
-    const loop = () => {
-      x += (tx - x) * 0.12; // spotlight trails the cursor, prmpt-style
-      y += (ty - y) * 0.12;
-      el.style.setProperty('--sx', `${x}px`);
-      el.style.setProperty('--sy', `${y}px`);
-      raf = requestAnimationFrame(loop);
+      mx.set(((e.clientX / window.innerWidth) * 2 - 1) * p.depth);
+      my.set(((e.clientY / window.innerHeight) * 2 - 1) * p.depth);
     };
     window.addEventListener('mousemove', onMove, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const rows = Array.from({ length: 14 }, (_, r) =>
-    Array.from({ length: 6 }, (_, c) => hiddenDocs[(r * 5 + c * 3) % hiddenDocs.length]),
-  );
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [mx, my, p.depth]);
 
   return (
-    <div ref={ref} className="spotlight-layer pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
-      <div className="flex h-full flex-col justify-between py-6 opacity-90">
-        {rows.map((row, r) => (
-          <div
-            key={r}
-            className="flex w-max gap-10 whitespace-nowrap font-mono text-xs tracking-[0.15em]"
-            style={{ transform: `translateX(${-((r * 137) % 400)}px)` }}
+    <FadeIn delay={p.delay} className={`absolute ${p.pos}`}>
+      <Parallax speed={p.speed}>
+        <motion.div style={{ x: mx, y: my }}>
+          <motion.div
+            animate={{ y: [0, -9, 0] }}
+            transition={{ duration: p.dur, repeat: Infinity, ease: 'easeInOut' }}
           >
-            {row.map((doc, c) => (
-              <span
-                key={c}
-                className={
-                  doc.startsWith('[')
-                    ? 'text-neon'
-                    : c % 3 === 0
-                      ? 'text-electric-glow'
-                      : 'text-paper/60'
-                }
-              >
-                {doc}
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
+            <div
+              className="st-magnetic pointer-events-auto flex items-center gap-2 rounded-full border border-white/15 bg-[#0A0A0F]/85 px-4 py-2 font-mono text-[11px] tracking-[0.15em] text-paper shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur-lg"
+              {...magnetic(200, 0.3)}
+            >
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-electric" />
+              {p.text}
+            </div>
+          </motion.div>
+        </motion.div>
+      </Parallax>
+    </FadeIn>
+  );
+}
+
+function StatusPills() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-[5] hidden md:block">
+      {PILLS.map((p) => (
+        <Pill key={p.text} p={p} />
+      ))}
     </div>
   );
 }
 
-// Small circled glyph that shuffles as you scroll (throttled) — the
-// ledger's odometer.
-function ScrollSymbol() {
-  const [sym, setSym] = useState('0x');
-  const last = useRef(0);
-  useEffect(() => {
-    const onScroll = () => {
-      const now = performance.now();
-      if (now - last.current < 80) return;
-      last.current = now;
-      setSym(SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  return (
-    <span className="mb-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper/60 font-mono text-[10px] text-paper">
-      {sym}
-    </span>
-  );
-}
-
+// The Dissection: a wireframe contract block pinned for a 3-screen scroll
+// track. Scroll scrubs the exploded view (storage slots, bytecode shards,
+// one fractured red H-1) before it reassembles and the panel slides over.
 export function HeroSection() {
-  // The hero is pinned (sticky) while the rest of the page slides over it —
-  // fade and shrink it slightly as it gets covered so the takeover reads.
-  const { scrollY } = useScroll();
-  const vh = typeof window !== 'undefined' ? window.innerHeight : 800;
-  const opacity = useTransform(scrollY, [vh * 0.1, vh * 0.95], [1, 0]);
-  const scale = useTransform(scrollY, [0, vh], [1, 0.94]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const pointer = useRef({ x: 0, y: 0 });
+  const [mode] = useState<HeroMode>(detectMode);
+  const isStatic = mode === 'static';
+
+  // Normalized pointer for the block's parallax tilt (full mode only).
+  useEffect(() => {
+    if (mode !== 'full') return;
+    const onMove = (e: MouseEvent) => {
+      pointer.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.current.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [mode]);
+
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ['start start', 'end end'],
+  });
+  const stageScale = useTransform(scrollYProgress, [0.85, 1], [1, 0.96]);
+  // Fade fully out — beneath the arriving panel there is only the Ledger Base.
+  const stageOpacity = useTransform(scrollYProgress, [0.78, 0.98], [1, 0]);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
+  // Front typography clears out so the mid-scroll stage is just the block.
+  const nameOpacity = useTransform(scrollYProgress, [0.2, 0.34], [1, 0]);
 
   return (
-    <section className="sticky top-0 z-0 h-screen" style={{ overflowX: 'clip' }}>
-      <motion.div style={{ opacity, scale }} className="ledger-grid relative flex h-full flex-col">
-        <SpotlightLayer />
-
-        {/* Massive name — resolves out of hex noise */}
-        <FadeIn delay={0.15} y={40} className="relative z-10 w-full overflow-hidden pt-24 md:pt-28">
-          <h1
-            className="hero-heading -mt-1 w-full whitespace-nowrap text-center font-display text-[15vw] font-black uppercase leading-none tracking-tight sm:text-[16vw] md:mt-2 md:text-[17vw]"
-            aria-label={identity.name}
-          >
-            <ScrambleText text={identity.name} />
-          </h1>
-        </FadeIn>
-
-        {/* Role line under the name */}
-        <FadeIn delay={0.3} y={20} className="relative z-10 w-full">
-          <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.35em] text-electric-glow sm:text-xs md:mt-6 md:text-sm">
-            {identity.title} <span className="text-paper/30">//</span> {identity.subtitle}
-          </p>
-        </FadeIn>
-
-        {/* Bottom bar */}
-        <div className="relative z-10 mt-auto flex items-end justify-between px-6 pb-7 sm:pb-8 md:px-10 md:pb-10">
-          <FadeIn delay={0.35} y={20}>
-            <ScrollSymbol />
-            <p
-              className="max-w-[160px] font-light uppercase leading-snug tracking-wide text-paper sm:max-w-[220px] md:max-w-[280px]"
-              style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
-            >
-              {identity.heroLine}
-            </p>
-          </FadeIn>
-          <FadeIn delay={0.5} y={20}>
-            <div className="st-magnetic" {...magnetic(280, 0.2)}>
-              <ContactButton />
+    <div
+      ref={trackRef}
+      id="hero-track"
+      className={isStatic ? 'relative z-0 h-screen' : 'relative z-0 h-[220vh] md:h-[300vh]'}
+    >
+      <section className="sticky top-0 h-screen" style={{ overflowX: 'clip' }}>
+        <motion.div
+          style={isStatic ? undefined : { scale: stageScale, opacity: stageOpacity }}
+          className="relative h-full"
+        >
+          {/* the dissection — transparent canvas behind the front name */}
+          {!isStatic && (
+            <div className="absolute inset-0 z-[3]">
+              <SceneBoundary fallback={null}>
+                <Suspense fallback={null}>
+                  <Scene
+                    progress={scrollYProgress}
+                    pointer={pointer}
+                    shardCount={mode === 'full' ? 18 : 10}
+                    tilt={mode === 'full'}
+                    dpr={mode === 'full' ? [1, 2] : [1, 1.5]}
+                  />
+                </Suspense>
+              </SceneBoundary>
             </div>
-          </FadeIn>
-        </div>
-      </motion.div>
-    </section>
+          )}
+
+          {/* FRONT name — reads over the block, then clears as it dissects */}
+          <motion.div
+            style={isStatic ? undefined : { opacity: nameOpacity }}
+            className="absolute inset-x-0 top-[13%] z-[4] text-center"
+          >
+            <FadeIn delay={0.15} y={40}>
+              <h1
+                className="hero-heading whitespace-nowrap font-display text-[15vw] font-black uppercase leading-none tracking-tight md:text-[14vw]"
+                aria-label={identity.fullName}
+              >
+                <ScrambleText text={identity.name} />
+              </h1>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.35em] text-electric-glow sm:text-xs md:mt-4 md:text-sm">
+                {identity.title} <span className="text-paper/30">//</span> {identity.subtitle}
+              </p>
+            </FadeIn>
+          </motion.div>
+
+          <StatusPills />
+
+          {/* bottom bar — contact only, kept out of the dissection's way */}
+          <div className="absolute inset-x-0 bottom-0 z-[6] flex items-end justify-end px-6 pb-7 sm:pb-8 md:px-10 md:pb-10">
+            <FadeIn delay={0.5} y={20}>
+              <div className="st-magnetic" {...magnetic(280, 0.2)}>
+                <ContactButton />
+              </div>
+            </FadeIn>
+          </div>
+
+          {!isStatic && (
+            <motion.p
+              style={{ opacity: hintOpacity }}
+              className="absolute bottom-8 left-1/2 z-[4] -translate-x-1/2 rounded-full bg-ink/70 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-paper/40 backdrop-blur-sm"
+            >
+              scroll to dissect ↓
+            </motion.p>
+          )}
+        </motion.div>
+      </section>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Trophy } from 'lucide-react';
-import { FadeIn } from '../components/motion';
+import { FadeIn, Parallax } from '../components/motion';
 import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 import { achievements } from '../data/profile';
@@ -11,12 +11,14 @@ export function WinsSection() {
       className="relative z-10 -mt-10 rounded-t-[40px] bg-ink px-5 pb-24 pt-20 sm:-mt-12 sm:rounded-t-[50px] sm:px-8 md:-mt-14 md:rounded-t-[60px] md:px-10 md:pt-28"
     >
       <div className="mx-auto max-w-5xl">
-        <FadeIn>
-          <SectionTag index="06" label="TROPHIES" />
-          <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
-            Wins
-          </GradientHeading>
-        </FadeIn>
+        <Parallax speed={-0.12}>
+          <FadeIn>
+            <SectionTag index="06" label="TROPHIES" />
+            <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
+              Wins
+            </GradientHeading>
+          </FadeIn>
+        </Parallax>
 
         <div className="mt-14 space-y-px overflow-hidden rounded-2xl border border-paper/10 bg-paper/10">
           {achievements.map((a, i) => (

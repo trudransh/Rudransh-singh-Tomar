@@ -3,6 +3,33 @@ import { motion, useInView, useScroll, useTransform, MotionValue } from 'framer-
 
 const EASE = [0.25, 0.1, 0.25, 1] as const;
 
+const PREFERS_REDUCED =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// --- Parallax: element-relative scroll depth -----------------------------
+// Positive speed moves faster than the scroll (foreground), negative slower
+// (background). Transform-only; sits out entirely under reduced motion.
+export function Parallax({
+  children,
+  speed = 0.2,
+  className,
+}: {
+  children: ReactNode;
+  speed?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const y = useTransform(scrollYProgress, [0, 1], [speed * 120, -speed * 120]);
+  if (PREFERS_REDUCED) return <div className={className}>{children}</div>;
+  return (
+    <motion.div ref={ref} style={{ y }} className={`will-change-transform ${className ?? ''}`}>
+      {children}
+    </motion.div>
+  );
+}
+
 // --- FadeIn: viewport-triggered entrance --------------------------------
 export function FadeIn({
   children,

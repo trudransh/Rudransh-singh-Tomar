@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { chains, chainLinks } from '../data/profile';
-import { FadeIn } from '../components/motion';
+import { FadeIn, Parallax } from '../components/motion';
 import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 
@@ -167,19 +167,22 @@ export function ConstellationSection() {
   }));
 
   return (
-    <section id="journey" className="relative px-5 py-24 sm:px-8 md:px-10 md:py-32">
+    <section id="journey" data-story="constellation" className="relative px-5 py-24 sm:px-8 md:px-10 md:py-32">
       <div className="mx-auto max-w-7xl">
-        <FadeIn>
-          <SectionTag index="02" label="THE JOURNEY" />
-          <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
-            18 chains
-          </GradientHeading>
-          <p className="mt-4 max-w-xl font-light leading-relaxed text-paper/70">
-            Every star is a chain I have shipped on or designed for. Lines exist only where a real
-            project spans both chains. Click a star to read the full expedition record.
-          </p>
-        </FadeIn>
+        <Parallax speed={-0.15}>
+          <FadeIn>
+            <SectionTag index="02" label="THE JOURNEY" />
+            <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
+              18 chains
+            </GradientHeading>
+            <p className="mt-4 max-w-xl font-light leading-relaxed text-paper/70">
+              Every star is a chain I have shipped on or designed for. Lines exist only where a real
+              project spans both chains. Click a star to read the full expedition record.
+            </p>
+          </FadeIn>
+        </Parallax>
 
+        <Parallax speed={0.06}>
         <FadeIn delay={0.15}>
           <div className="mt-10 flex flex-col gap-4 lg:flex-row">
             {/* The map */}
@@ -247,6 +250,7 @@ export function ConstellationSection() {
             </aside>
           </div>
         </FadeIn>
+        </Parallax>
       </div>
     </section>
   );

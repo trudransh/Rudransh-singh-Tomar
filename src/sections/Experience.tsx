@@ -1,4 +1,4 @@
-import { FadeIn } from '../components/motion';
+import { FadeIn, Parallax } from '../components/motion';
 import { GradientHeading } from '../components/GradientHeading';
 import { SectionTag } from '../components/ui';
 import { experience } from '../data/profile';
@@ -8,14 +8,16 @@ import { experience } from '../data/profile';
 // invisible; content visibility wins over animation novelty.)
 export function ExperienceSection() {
   return (
-    <section className="px-5 py-24 sm:px-8 md:px-10 md:py-32">
+    <section data-story="experience" className="px-5 py-24 sm:px-8 md:px-10 md:py-32">
       <div className="mx-auto max-w-5xl">
-        <FadeIn>
-          <SectionTag index="03" label="EXPEDITION LOG" />
-          <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
-            Experience
-          </GradientHeading>
-        </FadeIn>
+        <Parallax speed={-0.15}>
+          <FadeIn>
+            <SectionTag index="03" label="EXPEDITION LOG" />
+            <GradientHeading style={{ fontSize: 'clamp(3rem, 10vw, 130px)' }}>
+              Experience
+            </GradientHeading>
+          </FadeIn>
+        </Parallax>
 
         <div className="mt-14 border-l border-paper/15">
           {experience.map((e, i) => (
