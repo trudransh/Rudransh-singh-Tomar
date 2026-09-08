@@ -1,33 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn, ScrambleText } from '../components/motion';
 import { ContactButton } from '../components/ui';
 import { magnetic } from '../lib/stringtune';
 import { identity } from '../data/profile';
-
-const SYMBOLS = ['0x', 'Σ', '∆', '%', '§', '#', '£'];
-
-// Small circled glyph that shuffles as you scroll (throttled) — the
-// ledger's odometer.
-function ScrollSymbol() {
-  const [sym, setSym] = useState('0x');
-  const last = useRef(0);
-  useEffect(() => {
-    const onScroll = () => {
-      const now = performance.now();
-      if (now - last.current < 80) return;
-      last.current = now;
-      setSym(SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  return (
-    <span className="mb-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-paper/60 font-mono text-[10px] text-paper">
-      {sym}
-    </span>
-  );
-}
 
 export function HeroSection() {
   // The hero is pinned (sticky) while the rest of the page slides over it —
@@ -57,17 +32,8 @@ export function HeroSection() {
           </p>
         </FadeIn>
 
-        {/* Bottom bar */}
-        <div className="relative z-10 mt-auto flex items-end justify-between px-6 pb-7 sm:pb-8 md:px-10 md:pb-10">
-          <FadeIn delay={0.35} y={20}>
-            <ScrollSymbol />
-            <p
-              className="max-w-[160px] font-light uppercase leading-snug tracking-wide text-paper sm:max-w-[220px] md:max-w-[280px]"
-              style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
-            >
-              {identity.heroLine}
-            </p>
-          </FadeIn>
+        {/* Bottom bar — CTA only since the odometer + tagline came out */}
+        <div className="relative z-10 mt-auto flex items-end justify-end px-6 pb-7 sm:pb-8 md:px-10 md:pb-10">
           <FadeIn delay={0.5} y={20}>
             <div className="st-magnetic" {...magnetic(280, 0.2)}>
               <ContactButton />
