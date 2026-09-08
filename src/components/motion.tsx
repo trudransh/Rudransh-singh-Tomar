@@ -62,9 +62,12 @@ export function FadeIn({
 // --- ScrambleText: name resolves out of hex noise ------------------------
 const HEX = '0123456789abcdefx';
 
-export function ScrambleText({ text, className = '' }: { text: string; className?: string }) {
+// The animation lives in a hook so a caller can paint the same resolving
+// string into two stacked layers (see the hero) without them scrambling
+// independently and disagreeing mid-reveal.
+export function useScramble<T extends HTMLElement>(text: string) {
   const [display, setDisplay] = useState(text);
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref = useRef<T>(null);
   const inView = useInView(ref, { once: true });
 
   useEffect(() => {
@@ -87,6 +90,11 @@ export function ScrambleText({ text, className = '' }: { text: string; className
     return () => clearInterval(id);
   }, [inView, text]);
 
+  return { display, ref };
+}
+
+export function ScrambleText({ text, className = '' }: { text: string; className?: string }) {
+  const { display, ref } = useScramble<HTMLSpanElement>(text);
   return (
     <span ref={ref} className={className}>
       {display}
