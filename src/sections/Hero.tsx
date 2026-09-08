@@ -1,10 +1,13 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { FadeIn, ScrambleText } from '../components/motion';
+import { FadeIn, useScramble } from '../components/motion';
 import { ContactButton } from '../components/ui';
 import { magnetic } from '../lib/stringtune';
 import { identity } from '../data/profile';
 
 export function HeroSection() {
+  // One resolving string, painted into both layers of the name.
+  const { display, ref: nameRef } = useScramble<HTMLHeadingElement>(identity.name);
+
   // The hero is pinned (sticky) while the rest of the page slides over it —
   // fade and shrink it slightly as it gets covered so the takeover reads.
   const { scrollY } = useScroll();
@@ -17,11 +20,20 @@ export function HeroSection() {
       <motion.div style={{ opacity, scale }} className="ledger-grid relative flex h-full flex-col">
         {/* Massive name — resolves out of hex noise */}
         <FadeIn delay={0.15} y={40} className="relative z-10 w-full overflow-hidden pt-24 md:pt-28">
+          {/* Silver fill by default; the flowing vibrant gradient crossfades in
+              on hover — same treatment as the section headings. */}
           <h1
-            className="hero-heading -mt-1 w-full whitespace-nowrap text-center font-display text-[15vw] font-black uppercase leading-none tracking-tight sm:text-[16vw] md:mt-2 md:text-[17vw]"
+            ref={nameRef}
+            className="group relative -mt-1 w-full whitespace-nowrap text-center font-display text-[15vw] font-black uppercase leading-none tracking-tight sm:text-[16vw] md:mt-2 md:text-[17vw]"
             aria-label={identity.name}
           >
-            <ScrambleText text={identity.name} />
+            <span className="hero-heading">{display}</span>
+            <span
+              aria-hidden
+              className="vibrant-gradient absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            >
+              {display}
+            </span>
           </h1>
         </FadeIn>
 
