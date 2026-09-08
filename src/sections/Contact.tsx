@@ -109,9 +109,6 @@ export function ContactSection() {
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/30 sm:text-xs">
             © {new Date().getFullYear()} {identity.fullName}
           </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/30 sm:text-xs">
-            calculated risks · global impact
-          </p>
         </div>
       </div>
     </section>

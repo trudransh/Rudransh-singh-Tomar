@@ -9,15 +9,14 @@
 export const identity = {
   name: 'RUDRANSH',
   fullName: 'Rudransh Singh Tomar',
-  title: 'Smart Contract Security Engineer',
+  title: 'Blockchain Engineer',
   subtitle: 'Protocol Researcher · Solidity Auditor · DeFi Builder',
-  heroLine: 'calculated risks. global impact. building the future of web3.',
   email: 'trudranshsingh2003@gmail.com',
 };
 
 export const socials = [
   { label: 'GitHub · Personal', handle: 'trudransh', url: 'https://github.com/trudransh' },
-  { label: 'GitHub · Work', handle: 'trudranshsingh', url: 'https://github.com/trudranshsingh' },
+  { label: 'Twitter', handle: 'dracian_me', url: 'https://x.com/dracian_me' },
   {
     label: 'LinkedIn',
     handle: 'rudransh-singh-tomar',
@@ -30,23 +29,22 @@ export const stats = [
   { value: 27.5, suffix: 'k+', prefix: '$', label: 'hackathon winnings' },
   { value: 105, suffix: '+', prefix: '', label: 'research documents' },
   { value: 784660, suffix: '', prefix: '', label: 'lines committed' },
-  { value: 18, suffix: '', prefix: '', label: 'chains shipped on' },
+  { value: 18, suffix: '', prefix: '', label: 'chains' },
 ];
 
 // About paragraph, segmented so key phrases light up in the accent color
 // as the scroll reveal sweeps through.
 export const aboutSegments = [
-  { text: "I'm a smart contract security engineer and protocol researcher. I take ideas from" },
-  { text: 'ground-zero research', highlight: true },
+  { text: "I'm a Blockchain Developer and protocol engineer. I take ideas from" },
+  { text: 'ground-zero', highlight: true },
   { text: 'to' },
-  { text: 'audited mainnet code', highlight: true },
-  { text: '—' },
+  { text: 'Mainnet Ready code.', highlight: true },
   { text: '105+ technical documents', highlight: true },
-  { text: ', production Solidity across' },
+  { text: ', written production smart contracts across' },
   { text: '18 chains', highlight: true },
   { text: ', and' },
-  { text: 'simulations that prove designs', highlight: true },
-  { text: 'before real capital ever touches them.' },
+  { text: 'Simulated Models in python', highlight: true },
+  { text: 'before market launch.' },
 ];
 
 // The constellation. Each chain is a star on the map, with the actual work
@@ -63,9 +61,9 @@ export const chains: ChainNode[] = [
     name: 'Ethereum',
     role: 'Home turf — production Solidity, audits, DeFi integrations',
     projects: [
-      { name: 'Ladder Integrations', note: '5,000+ lines: ERC-4626 wrappers, AMM pools, epoch redemptions' },
-      { name: 'Trust Protocol', note: 'Game-theoretic trust bonds, UUPS architecture' },
-      { name: 'ERC-404 Audits', note: 'Mainnet security, Uniswap + bonding curves' },
+      { name: 'Ladder Integrations', note: 'ERC-4626 wrappers, AMM pools, Queued redemptions' },
+      { name: 'Trust Protocol', note: 'Game-theoretic trust bonds, aave vaults integrated' },
+      { name: 'ERC-404 Audits', note: 'ERC-404 & TRC-404 integrations, Uniswap + bonding curves' },
       { name: 'Phoenix', note: 'RWA CDP factory — S&P 500-pegged stablecoins' },
     ],
   },
@@ -103,7 +101,7 @@ export const chains: ChainNode[] = [
   },
   {
     name: 'ICP',
-    role: 'Grant-winning security + shipped production dApps',
+    role: 'Grant-winning  + shipped production dApps',
     projects: [
       { name: 'Hush Protocol', note: '$25k grant — DKIM + VetKeys wallet recovery' },
       { name: 'Kai Foundry dApps', note: 'mahaka, merch-store, indonesia-on-chain (Motoko)' },
