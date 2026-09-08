@@ -67,7 +67,7 @@ function GiantCTA() {
 
 export function ContactSection() {
   return (
-    <section id="contact" className="ledger-grid border-t border-paper/10 px-5 pb-12 pt-24 sm:px-8 md:px-10 md:pt-32">
+    <section id="contact" data-story="contact" className="ledger-grid border-t border-paper/10 px-5 pb-12 pt-24 sm:px-8 md:px-10 md:pt-32">
       <div className="mx-auto max-w-6xl">
         <FadeIn>
           <SectionTag index="07" label="OPEN A CHANNEL" />

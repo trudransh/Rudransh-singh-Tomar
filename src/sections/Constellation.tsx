@@ -167,7 +167,7 @@ export function ConstellationSection() {
   }));
 
   return (
-    <section id="journey" className="relative px-5 py-24 sm:px-8 md:px-10 md:py-32">
+    <section id="journey" data-story="constellation" className="relative px-5 py-24 sm:px-8 md:px-10 md:py-32">
       <div className="mx-auto max-w-7xl">
         <FadeIn>
           <SectionTag index="02" label="THE JOURNEY" />

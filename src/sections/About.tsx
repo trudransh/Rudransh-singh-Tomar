@@ -5,7 +5,7 @@ import { aboutSegments, stats } from '../data/profile';
 
 export function AboutSection() {
   return (
-    <section id="about" className="relative flex min-h-screen flex-col items-center justify-center px-5 py-20 sm:px-8 md:px-10">
+    <section id="about" data-story="about" className="relative flex min-h-screen flex-col items-center justify-center px-5 py-20 sm:px-8 md:px-10">
       <div className="flex w-full max-w-5xl flex-col items-center gap-10 sm:gap-14 md:gap-16">
         <FadeIn className="w-full text-center">
           <SectionTag index="01" label="THE ENGINEER" />

@@ -8,7 +8,7 @@ import { experience } from '../data/profile';
 // invisible; content visibility wins over animation novelty.)
 export function ExperienceSection() {
   return (
-    <section className="px-5 py-24 sm:px-8 md:px-10 md:py-32">
+    <section data-story="experience" className="px-5 py-24 sm:px-8 md:px-10 md:py-32">
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <SectionTag index="03" label="EXPEDITION LOG" />

@@ -8,6 +8,7 @@ import { ProjectsSection } from './sections/Projects';
 import { ResearchSection } from './sections/Research';
 import { WinsSection } from './sections/Wins';
 import { ContactSection } from './sections/Contact';
+import { Storyteller } from './components/Storyteller';
 import { initStringTune, cursorFollower } from './lib/stringtune';
 
 export default function App() {
@@ -47,6 +48,9 @@ export default function App() {
         <WinsSection />
         <ContactSection />
       </div>
+
+      {/* SPECTER — pixel storyteller, docked across the whole page */}
+      <Storyteller />
     </main>
   );
 }

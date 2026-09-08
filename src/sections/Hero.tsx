@@ -3,78 +3,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn, ScrambleText } from '../components/motion';
 import { ContactButton } from '../components/ui';
 import { magnetic } from '../lib/stringtune';
-import { hiddenDocs, identity } from '../data/profile';
+import { identity } from '../data/profile';
 
 const SYMBOLS = ['0x', 'Σ', '∆', '%', '§', '#', '£'];
-
-// Lando-style reveal: a hidden layer of real research titles and audit
-// finding IDs, uncovered by a soft spotlight that trails the cursor.
-// The mask lives in CSS (.spotlight-layer); we just feed it eased coords.
-function SpotlightLayer() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-    const el = ref.current;
-    if (!el) return;
-    let tx = -999;
-    let ty = -999;
-    let x = -999;
-    let y = -999;
-    let raf = 0;
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      tx = e.clientX - r.left;
-      ty = e.clientY - r.top;
-    };
-    const loop = () => {
-      x += (tx - x) * 0.12; // spotlight trails the cursor, prmpt-style
-      y += (ty - y) * 0.12;
-      el.style.setProperty('--sx', `${x}px`);
-      el.style.setProperty('--sy', `${y}px`);
-      raf = requestAnimationFrame(loop);
-    };
-    window.addEventListener('mousemove', onMove, { passive: true });
-    raf = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const rows = Array.from({ length: 14 }, (_, r) =>
-    Array.from({ length: 6 }, (_, c) => hiddenDocs[(r * 5 + c * 3) % hiddenDocs.length]),
-  );
-
-  return (
-    <div ref={ref} className="spotlight-layer pointer-events-none absolute inset-0 z-[5] overflow-hidden" aria-hidden>
-      <div className="flex h-full flex-col justify-between py-6 opacity-90">
-        {rows.map((row, r) => (
-          <div
-            key={r}
-            className="flex w-max gap-10 whitespace-nowrap font-mono text-xs tracking-[0.15em]"
-            style={{ transform: `translateX(${-((r * 137) % 400)}px)` }}
-          >
-            {row.map((doc, c) => (
-              <span
-                key={c}
-                className={
-                  doc.startsWith('[')
-                    ? 'text-neon'
-                    : c % 3 === 0
-                      ? 'text-electric-glow'
-                      : 'text-paper/60'
-                }
-              >
-                {doc}
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // Small circled glyph that shuffles as you scroll (throttled) — the
 // ledger's odometer.
@@ -109,8 +40,6 @@ export function HeroSection() {
   return (
     <section className="sticky top-0 z-0 h-screen" style={{ overflowX: 'clip' }}>
       <motion.div style={{ opacity, scale }} className="ledger-grid relative flex h-full flex-col">
-        <SpotlightLayer />
-
         {/* Massive name — resolves out of hex noise */}
         <FadeIn delay={0.15} y={40} className="relative z-10 w-full overflow-hidden pt-24 md:pt-28">
           <h1

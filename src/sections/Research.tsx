@@ -7,7 +7,7 @@ import { researchAreas } from '../data/profile';
 // like flipping the ledger open to a printed page.
 export function ResearchSection() {
   return (
-    <section className="rounded-t-[40px] bg-white px-5 py-24 text-ink sm:rounded-t-[50px] sm:px-8 md:rounded-t-[60px] md:px-10 md:py-32">
+    <section data-story="research" className="rounded-t-[40px] bg-white px-5 py-24 text-ink sm:rounded-t-[50px] sm:px-8 md:rounded-t-[60px] md:px-10 md:py-32">
       <div className="mx-auto max-w-6xl">
         <FadeIn>
           <div className="mb-6 font-mono text-xs tracking-[0.3em] text-electric sm:text-sm">
